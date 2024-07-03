@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     # third-party apps
     'pytest',
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

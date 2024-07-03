@@ -1,7 +1,4 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+# added by Shaxzodbek
 venv
 .venv
 venv/
@@ -10,11 +7,16 @@ env
 .env
 env/
 .env/
-runner.sh
-# C extensions
-*.so
 .idea
 .idea/
+db.sqlite3
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+# C extensions
+*.so
 # Distribution / packaging
 .Python
 build/
