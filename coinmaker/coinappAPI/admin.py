@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, InvitedFriends, TelegramData, Tasks
+from .models import User, InvitedFriends, TelegramDate, Tasks
 
 
 @admin.register(User)
@@ -14,8 +14,8 @@ class InvitedFriendsAdmin(admin.ModelAdmin):
     list_display, list_filter, search_fields = all, all, all
 
 
-@admin.register(TelegramData)
-class TelegramDataAdmin(admin.ModelAdmin):
+@admin.register(TelegramDate)
+class TelegramDateAdmin(admin.ModelAdmin):
     all = ['name', 'telegram_id']
     list_display, list_filter, search_fields = all, all, all
 
