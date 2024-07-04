@@ -31,7 +31,7 @@ class Tasks(models.Model):
     task = models.CharField(max_length=100)
     task_image = models.ImageField(upload_to='tasks_image/%Y/%m/')
     level = models.CharField(choices=(('E', 'Easy'), ('M', 'Medium'), ('W', 'Hard')), max_length=100)
-    bonus = models.IntegerField()  # depending level
+    bonus = models.IntegerField()
 
     def __str__(self):
         return f"{self.task} with {self.bonus} at {self.level}"
@@ -51,15 +51,18 @@ class User(models.Model):
         ('grandmaster', 'grandmaster'),
         ('epic', 'epic'),
         ('legend', 'legend'),
-        ('mific', 'mific'),
+        ('mythic', 'mythic'),
     )
     user_date = models.ForeignKey(TelegramDate, on_delete=models.CASCADE)
     level = models.CharField(choices=levels, max_length=20)
     balance = models.PositiveBigIntegerField(default=0)
     boots = models.IntegerField(default=0)
     friends = models.ManyToManyField(InvitedFriends)
-    last_updated = models.DateTimeField(auto_now=True)
+    last_active = models.DateTimeField(auto_now=True)
     tasks = models.ManyToManyField(Tasks)
+    passive = models.PositiveBigIntegerField(default=0)
+    login_time = models.DateTimeField(auto_now_add=True)
+    add_per_tap = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.user_date} {self.level} {self.balance} {self.tasks}"

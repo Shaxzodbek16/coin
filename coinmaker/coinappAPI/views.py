@@ -1,26 +1,42 @@
-from django.shortcuts import render
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from .models import User, InvitedFriends, TelegramDate, Tasks
 from .serializers import UserSerializer, InvitedFriendsSerializer, TelegramDateSerializer, TasksSerializer
 from rest_framework.views import APIView
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 
 class UserAPIView(APIView):
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+    filterset_fields = ['level']
+    ordering_fields = ['balance']
+
+    def get_queryset(self):
+        queryset = User.objects.all()
+        level = self.request.query_params.get('level')
+        if level:
+            queryset = queryset.filter(level=level)
+        return queryset
+
     def get(self, request, pk=None, *args, **kwargs):
         if pk:
             try:
                 user = User.objects.get(pk=pk)
+                User.objects.filter(pk=pk).update(balance=user.balance + user.add_per_tap)
                 serializer = UserSerializer(user)
                 return Response(serializer.data)
             except User.DoesNotExist:
                 return Response(status=status.HTTP_404_NOT_FOUND)
-        user = User.objects.all()
-        serializer = UserSerializer(user, many=True)
+        queryset = self.get_queryset()
+        filter_backends = (DjangoFilterBackend, OrderingFilter)
+        for backend in list(filter_backends):
+            queryset = backend().filter_queryset(self.request, queryset, self)
+        serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
 
     def post(self, request):
