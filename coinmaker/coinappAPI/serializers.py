@@ -1,18 +1,10 @@
 from rest_framework import serializers
-from .models import User, InvitedFriends, TelegramDate, Tasks
+from .models import User, InvitedFriends, Tasks
 
 
 class InvitedFriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvitedFriends
-        fields = '__all__'
-        read_only_fields = ('id',)
-
-
-class TelegramDateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TelegramDate
-
         fields = '__all__'
         read_only_fields = ('id',)
 
@@ -30,9 +22,8 @@ class TasksSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    friends = InvitedFriendsSerializer(many=True)
-    user_date = TelegramDateSerializer()
-    tasks = TasksSerializer(many=True)
+    # friends = InvitedFriendsSerializer(many=True)
+    # tasks = TasksSerializer(many=True)
 
     class Meta:
         model = User
