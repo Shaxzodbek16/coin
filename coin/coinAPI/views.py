@@ -3,16 +3,25 @@ from rest_framework import status
 from rest_framework.response import Response
 from .models import User, InvitedFriends, Tasks, Boots
 from .serializers import UserSerializer, BootsSerializer, TasksSerializer, InvitedFriendsSerializer
+from django.db.models import ManyToManyRel
 
 
 class UserAPIView(APIView):
     def get(self, request, pk=None, *args, **kwargs):
         if pk:
-            serializer = UserSerializer(User.objects.get(pk=pk))
+            user = User.objects.get(pk=pk)
+            serializer = UserSerializer(user)
             click_up = request.query_params.get('click_up', False)
             energy = request.query_params.get('energy', False)
             boots = request.query_params.get('boots', False)
-            # hali ko'p logika
+            print(type(click_up))
+            if click_up == "True":
+                pass
+            if energy == "True":
+                pass
+            if boots == "True":
+                pass
+
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         serializer = UserSerializer(User.objects.all(), many=True)
@@ -22,7 +31,8 @@ class UserAPIView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': f'Successfully created by:\n {serializer.data}'}, status=status.HTTP_201_CREATED)
+            return Response({'message': f'Successfully created by:\n {serializer.data}'},
+                            status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk=None, *args, **kwargs):

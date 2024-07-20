@@ -41,7 +41,7 @@ class User(models.Model):
     tasks = models.ManyToManyField(Tasks, blank=True, null=True)
     passive = models.PositiveBigIntegerField(default=0)
     login_time = models.DateTimeField(auto_now_add=True)
-    boots = models.ForeignKey(Boots, on_delete=models.CASCADE, blank=True, null=True)
+    boots = models.OneToOneField(Boots, on_delete=models.CASCADE, blank=True, null=True)
     lv_up_amount = models.PositiveBigIntegerField(default=500)
 
     def __str__(self) -> str:

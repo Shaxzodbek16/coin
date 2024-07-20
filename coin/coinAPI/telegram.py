@@ -16,7 +16,9 @@ def start(message):
     user = message.from_user
     data = {
         'telegram_id': str(user.id),
-        'name': user.first_name
+        'name': user.first_name,
+
+
     }
     data = json.dumps(data)
     response = requests.post(API_URL, data=data)
