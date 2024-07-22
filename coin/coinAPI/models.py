@@ -19,15 +19,6 @@ class Tasks(models.Model):
         return f"{self.task} with {self.bonus} at {self.level}"
 
 
-class Boots(models.Model):
-    click = models.IntegerField(default=2)
-    energy = models.IntegerField(default=6)
-    boots = models.IntegerField(default=6)
-
-    def __str__(self):
-        return f"{self.click} {self.energy} {self.boots}"
-
-
 class User(models.Model):
     voin, elite, master, grandmaster, epic, legend, mythic = 'voin', 'elite', 'master', 'grandmaster', 'epic', 'legend', 'mythic'
     levels = ((voin, 'voin'), (elite, 'elite'), (master, 'master'), (grandmaster, 'grandmaster'), (epic, 'epic'),
@@ -41,18 +32,23 @@ class User(models.Model):
     tasks = models.ManyToManyField(Tasks, blank=True, null=True)
     passive = models.PositiveBigIntegerField(default=0)
     login_time = models.DateTimeField(auto_now_add=True)
-    boots = models.OneToOneField(Boots, on_delete=models.CASCADE, blank=True, null=True)
+    click = models.IntegerField(default=2)
+    energy = models.IntegerField(default=6)
+    boots = models.IntegerField(default=6)
     lv_up_amount = models.PositiveBigIntegerField(default=500)
 
     def __str__(self) -> str:
         return f"{self.name} --- {self.level} --- {self.balance}"
 
-    def next_level(self, user_level: str) -> bool | str:
+    @staticmethod
+    def next_level(user_level: str, user_balance: int) -> bool | str:
         """
-        increase user level
+        increase user level depending on user_balance
         :param user_level:
+        :param user_balance:
         :return: next level or False
         """
+
         levels = ('voin', 'elite', 'master', 'grandmaster', 'epic', 'legend', 'mythic')
         for i, lv in enumerate(levels):
             if user_level == lv:

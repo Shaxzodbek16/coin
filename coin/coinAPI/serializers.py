@@ -1,16 +1,10 @@
 from rest_framework import serializers
-from .models import User, InvitedFriends, Boots, Tasks
+from .models import User, InvitedFriends, Tasks
 
 
 class InvitedFriendsSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvitedFriends
-        fields = '__all__'
-
-
-class BootsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Boots
         fields = '__all__'
 
 
@@ -21,7 +15,6 @@ class TasksSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    boots = BootsSerializer(many=True, read_only=True, required=False)
     tasks = TasksSerializer(many=True, read_only=True, required=False)
     invited_friends = InvitedFriendsSerializer(many=True, read_only=True, required=False)
 

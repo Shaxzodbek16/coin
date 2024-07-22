@@ -1,6 +1,6 @@
 from django.test import TestCase, client
-from .models import User, Boots, Tasks, InvitedFriends
-from .serializers import UserSerializer, BootsSerializer, TasksSerializer, InvitedFriendsSerializer
+from .models import User, Tasks, InvitedFriends
+from .serializers import UserSerializer, TasksSerializer, InvitedFriendsSerializer
 
 
 class CoinAppAPITests(TestCase):
