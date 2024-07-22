@@ -36,19 +36,12 @@ class User(models.Model):
     energy = models.IntegerField(default=6)
     boots = models.IntegerField(default=6)
     lv_up_amount = models.PositiveBigIntegerField(default=500)
+    level_img = models.PositiveIntegerField(default=1)
 
     def __str__(self) -> str:
         return f"{self.name} --- {self.level} --- {self.balance}"
 
-    @staticmethod
-    def next_level(user_level: str, user_balance: int) -> bool | str:
-        """
-        increase user level depending on user_balance
-        :param user_level:
-        :param user_balance:
-        :return: next level or False
-        """
-
+    def next_level(self, user_level: str) -> bool | str:
         levels = ('voin', 'elite', 'master', 'grandmaster', 'epic', 'legend', 'mythic')
         for i, lv in enumerate(levels):
             if user_level == lv:
@@ -57,3 +50,13 @@ class User(models.Model):
                     return user_level
                 except IndexError:
                     return False
+
+    def next_level_(self, user_level: str, user_balance: int | float, img: int) -> tuple[str | bool, int | bool]:
+        coins_and_levels = {'voin': 1e3, 'elite': 1e4, 'master': 1e5, 'grandmaster': 1e6, 'epic': 1e7, 'legend': 1e8,
+                            'mythic': 1e9}
+        is_up = coins_and_levels.get(user_level)
+        if user_balance > is_up:
+            img += 1
+            user_level = self.next_level(user_level)
+            return user_level, img
+        return False, False

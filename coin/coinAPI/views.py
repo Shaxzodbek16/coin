@@ -38,9 +38,10 @@ class UserAPIView(APIView):
                 user.save()
             if boots == "True":
                 pass
-            level = user.next_level(user.level, user.balance)
-            if level is not False:
+            level, img = user.next_level_(user.level, user.balance, user.level_img)
+            if level and img:
                 user.level = level
+                user.level_img = img
                 user.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
