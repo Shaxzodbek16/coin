@@ -12,7 +12,7 @@ class UserAPIView(APIView):
             click_up = request.query_params.get('click_up', False)
             energy = request.query_params.get('energy', False)
             boots = request.query_params.get('boots', False)
-            # hali ko'p logika
+            # hali ko'p logika 
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         serializer = UserSerializer(User.objects.all(), many=True)
