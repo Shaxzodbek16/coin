@@ -71,3 +71,55 @@ class UserAPIView(APIView):
             user.delete()
             return Response({'message': f'Succesfully deleted {name} by {pk} id'}, status=status.HTTP_204_NO_CONTENT)
         return Response({'message': f'user not found by {pk} id'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+#task
+
+class UserAPIView(APIView):
+    def get(self, request, pk=None, *args, **kwargs):
+        if pk:
+            user = User.objects.get(pk=pk)
+            serializer = UserSerializer(user)
+            click = request.query_params.get('click', False)
+            energy = request.query_params.get('energy', False)
+            stop_energy = request.query_params.get('stop_energy', False)
+            boots = request.query_params.get('boots', False)
+            increase_balance = request.query_params.get('increase_balance', False)
+            task_complete = request.query_params.get('task_complete', None)
+
+            if increase_balance == 'True':
+                user.balance = user.balance + user.click
+                user.save()
+            if click == "True":
+                if user.balance >= user.lv_up_amount:
+                    user.balance -= user.lv_up_amount
+                    user.lv_up_amount = user.lv_up_amount * 1.2
+                    user.lv_up_amount = int(user.lv_up_amount)
+                    user.click = user.click + 1
+                    user.save()
+                return Response({"message": "Not enaught coin to click up"}, status=status.HTTP_400_BAD_REQUEST)
+            if energy == "True":
+                user.click = user.click * 2
+                user.energy -= 1
+                user.save()
+            if stop_energy == "True":
+                user.click = user.click // 2
+                user.save()
+            if boots == "True":
+                pass
+            if task_complete:
+                task = Tasks.objects.get(pk=task_complete)
+                if user.complete_task(task):
+                    return Response({"message": f"Task {task.task} completed successfully"}, status=status.HTTP_200_OK)
+                return Response({"message": f"Task {task.task} could not be completed"},
+                                status=status.HTTP_400_BAD_REQUEST)
+
+            level, img = user.next_level_(user.level, user.balance, user.level_img)
+            if level and img:
+                user.level = level
+                user.level_img = img
+                user.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        serializer = UserSerializer(User.objects.all(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

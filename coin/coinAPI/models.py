@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class InvitedFriends(models.Model):
     name = models.CharField(max_length=100)
     telegram_id = models.CharField(max_length=100)
@@ -8,16 +7,15 @@ class InvitedFriends(models.Model):
     def __str__(self):
         return f"{self.name} with {self.telegram_id}"
 
-
 class Tasks(models.Model):
     task = models.CharField(max_length=100)
     task_image = models.ImageField(upload_to='tasks_image/%Y/%m/')
     level = models.CharField(choices=(('E', 'Easy'), ('M', 'Medium'), ('W', 'Hard')), max_length=100)
     bonus = models.IntegerField()
+    status = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.task} with {self.bonus} at {self.level}"
-
 
 class User(models.Model):
     voin, elite, master, grandmaster, epic, legend, mythic = 'voin', 'elite', 'master', 'grandmaster', 'epic', 'legend', 'mythic'
@@ -60,3 +58,12 @@ class User(models.Model):
             user_level = self.next_level(user_level)
             return user_level, img
         return False, False
+
+    def complete_task(self, task):
+        if task in self.tasks.all() and not task.status:
+            task.status = True
+            task.save()
+            self.balance += task.bonus
+            self.save()
+            return True
+        return False
