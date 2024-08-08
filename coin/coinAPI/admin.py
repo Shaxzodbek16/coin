@@ -23,8 +23,6 @@ class InvitedFriendsAdmin(admin.ModelAdmin):
     search_fields = ('name', 'telegram_id')
     list_filter = ('name',)
 
-
-
 # admin.site.register(User, UserAdmin)
 # admin.site.register(Tasks, TasksAdmin)
 # admin.site.register(InvitedFriends, InvitedFriendsAdmin)
